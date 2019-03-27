@@ -1,6 +1,11 @@
 MoneyTransfer between Accounts API / A Restful API.
 
 Developed using Java 8 and very light framework Spark.
+
+All classes has been analysed using SonarLint tool.
+All classes' code has been covered.
+All unit test cases have been run and all successfulled.
+
 ----------------------------------
 
 Features
@@ -12,7 +17,6 @@ Transfer list/read/creation/update
 In-memory database // using map 
 Stand-alone jar (no need for a pre-installed container/server)
 
-Integration tests (using REST-assured)
 Requirements
 Java 8
 Maven
