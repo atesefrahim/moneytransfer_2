@@ -8,22 +8,19 @@ import java.util.stream.Collectors;
 import com.ates.moneytransfer.model.Account;
 
 public class AccountService {
-	
-	private static final AtomicInteger COUNTER = new AtomicInteger();
+
 	
 	public final static Map<Integer, Account> accounts = new LinkedHashMap();
 	static
 	{
-		 Account account = new Account(0,"ibrahim", BigDecimal.valueOf(1460));
+		 Account account = new Account("ibrahim", BigDecimal.valueOf(1460));
 	     accounts.put(0, account);
-	     Account account2 = new Account(1,"halil", BigDecimal.valueOf(2560));
+	     Account account2 = new Account("halil", BigDecimal.valueOf(2560));
 	     accounts.put(1, account2);
-	     Account account3 = new Account(2,"ates", BigDecimal.valueOf(6964));
+	     Account account3 = new Account("ates", BigDecimal.valueOf(6964));
 	     accounts.put(2, account3);
 	}
 
-
-    private static final AtomicInteger count = new AtomicInteger(0);
  
     public Account findById(int id) {
     	
@@ -50,9 +47,7 @@ public class AccountService {
     public List findAll() {
         return new ArrayList<>(accounts.values());
     }
- 
-    public AccountService() {
-    }
+
 
 
 }
