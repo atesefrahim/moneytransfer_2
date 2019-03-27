@@ -1,6 +1,5 @@
 package com.ates.moneytransfer.model;
 import java.math.BigDecimal;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Account {
@@ -13,7 +12,8 @@ public class Account {
 
     private BigDecimal balance;
 
-    public Account(int accountId, String name, BigDecimal balance) {
+    public Account(String name, BigDecimal balance) {
+
         this.accountId = COUNTER.getAndIncrement();
         this.name = name;
         this.balance = balance;
@@ -22,11 +22,6 @@ public class Account {
     public int getAccountId() {
         return accountId;
     }
-    
-
-    public void setAccountId(int accountId) {
-		this.accountId = accountId;
-	}
 
 	public String getName() {
         return name;
@@ -65,18 +60,5 @@ public class Account {
 
         this.accountId = COUNTER.getAndIncrement();
 
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Account account = (Account) o;
-        return accountId == account.accountId;
-    }
-
-    @Override
-    public int hashCode() {
-        return accountId;
     }
 }
