@@ -2,7 +2,6 @@ package com.ates.moneytransfer.model;
 
 
 import java.math.BigDecimal;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Transfer {
@@ -22,7 +21,7 @@ public class Transfer {
 
     private TransferStatus status;
 
-    public Transfer(int id, int toAccountId, int fromAccountId, BigDecimal amount, String comment) {
+    public Transfer(int toAccountId, int fromAccountId, BigDecimal amount, String comment) {
         this.id = COUNTER.getAndIncrement();
         this.toAccountId = toAccountId;
         this.fromAccountId = fromAccountId;
@@ -40,9 +39,6 @@ public class Transfer {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public int getToAccountId() {
         return toAccountId;
@@ -84,26 +80,50 @@ public class Transfer {
         this.status = status;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Transfer transfer = (Transfer) o;
-        return id == transfer.id;
-    }
 
-    @Override
-    public int hashCode() {
-        return id;
-    }
 
 
     public enum TransferStatus {
-        CREATED,
-        UPDATED,
-        AMOUNTZERO,
-        AMOUNTLESS,
-        TOIDNULL,
-        FROMIDNULL
+        CREATED{
+            @Override
+            public String toString() {
+                return "Created";
+            }
+        },
+
+        UPDATED{
+            @Override
+            public String toString() {
+                return "Updated";
+            }
+        },
+
+        AMOUNTZERO{
+            @Override
+            public String toString() {
+                return "Because transfer amount is zero, process can not be proceed. Please check your information!";
+            }
+        },
+
+        AMOUNTLESS{
+            @Override
+            public String toString() {
+                return "Balance is less than amount you want send. Please check your information!";
+            }
+        },
+
+        TOIDNULL{
+            @Override
+            public String toString() {
+                return "sender id can not be null. Please check your information!";
+            }
+        },
+
+        FROMIDNULL{
+            @Override
+            public String toString() {
+                return "id that you send money can not be null. Please check your information!";
+            }
+        }
     }
 }
