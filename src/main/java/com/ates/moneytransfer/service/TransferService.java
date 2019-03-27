@@ -7,25 +7,20 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class TransferService {
 
-    private AccountService accountService = new AccountService();
 
-    private static final AtomicInteger COUNTER = new AtomicInteger();
 
     public final static Map<Integer, Transfer> transfers = new LinkedHashMap();
     static
     {
-        Transfer transfer = new Transfer(0,1,0, BigDecimal.valueOf(23), "make transfer");
+        Transfer transfer = new Transfer(1,0, BigDecimal.valueOf(23), "make transfer");
         transfers.put(0, transfer);
-        Transfer transfer2 = new Transfer(1,2,0, BigDecimal.valueOf(55), "make transfer 2");
+        Transfer transfer2 = new Transfer(2,0, BigDecimal.valueOf(55), "make transfer 2");
         transfers.put(1, transfer2);
     }
 
-
-    private static final AtomicInteger count = new AtomicInteger(0);
 
     public Transfer findById(int id) {
 
@@ -34,77 +29,35 @@ public class TransferService {
 
     public Transfer addTransfer(Transfer transfer) {
 
-
-        if(transfer.getAmount().compareTo(BigDecimal.ZERO) > 0 &&
-                accountService.accounts.get(transfer.getFromAccountId()) != null &&
-                accountService.accounts.get(transfer.getToAccountId()) != null &&
-                accountService.accounts.get(transfer.getFromAccountId()).getBalance().compareTo(transfer.getAmount()) >= 0)
-        {
+        if(checkCredentials(transfer)){
 
             transfers.put(transfer.getId(), transfer);
-            accountService.accounts.get(transfer.getFromAccountId()).withdraw(transfer.getAmount());
-            accountService.accounts.get(transfer.getToAccountId()).deposit(transfer.getAmount());
+            AccountService.accounts.get(transfer.getFromAccountId()).withdraw(transfer.getAmount());
+            AccountService.accounts.get(transfer.getToAccountId()).deposit(transfer.getAmount());
             transfer.setStatus(Transfer.TransferStatus.CREATED);
 
 
         } else
         {
-
-            if (transfer.getAmount().compareTo(BigDecimal.ZERO) == 0)
-            {
-                transfer.setStatus(Transfer.TransferStatus.AMOUNTZERO);
-            }
-            else  if (accountService.accounts.get(transfer.getFromAccountId()) == null)
-            {
-                transfer.setStatus(Transfer.TransferStatus.FROMIDNULL);
-            }
-            else if (accountService.accounts.get(transfer.getToAccountId()) == null)
-            {
-                transfer.setStatus(Transfer.TransferStatus.TOIDNULL);
-            }
-            else if (accountService.accounts.get(transfer.getFromAccountId()).getBalance().compareTo(transfer.getAmount()) < 0)
-            {
-                transfer.setStatus(Transfer.TransferStatus.AMOUNTLESS);
-            }
+            updateStatus(transfer);
         }
         return transfer;
     }
 
     public Transfer updateTransfer(int id, Transfer transfer) {
 
-        if(transfer.getAmount().compareTo(BigDecimal.ZERO) > 0 &&
-                accountService.accounts.get(transfer.getFromAccountId()) != null &&
-                accountService.accounts.get(transfer.getToAccountId()) != null &&
-                accountService.accounts.get(transfer.getFromAccountId()).getBalance().compareTo(transfer.getAmount()) >= 0)
+        if(checkCredentials(transfer))
         {
-
-
             transfers.put(id, transfer);
-            accountService.accounts.get(transfer.getFromAccountId()).withdraw(transfer.getAmount());
-            accountService.accounts.get(transfer.getToAccountId()).deposit(transfer.getAmount());
+            AccountService.accounts.get(transfer.getFromAccountId()).withdraw(transfer.getAmount());
+            AccountService.accounts.get(transfer.getToAccountId()).deposit(transfer.getAmount());
 
             transfer.setStatus(Transfer.TransferStatus.UPDATED);
 
         }
         else
         {
-
-            if (transfer.getAmount().compareTo(BigDecimal.ZERO) == 0)
-            {
-                transfer.setStatus(Transfer.TransferStatus.AMOUNTZERO);
-            }
-            else if (accountService.accounts.get(transfer.getFromAccountId()) == null)
-            {
-                transfer.setStatus(Transfer.TransferStatus.FROMIDNULL);
-            }
-            else if (accountService.accounts.get(transfer.getToAccountId()) == null)
-            {
-                transfer.setStatus(Transfer.TransferStatus.TOIDNULL);
-            }
-            else if (accountService.accounts.get(transfer.getFromAccountId()).getBalance().compareTo(transfer.getAmount()) < 0)
-            {
-                transfer.setStatus(Transfer.TransferStatus.AMOUNTLESS);
-            }
+            updateStatus(transfer);
         }
 
         return transfer;
@@ -112,16 +65,43 @@ public class TransferService {
     }
 
 
-    public void delete(int id) {
-        transfers.remove(id);
-    }
-
     public List findAll() {
         return new ArrayList<>(transfers.values());
     }
 
-    public TransferService() {
+
+    public Boolean checkCredentials(Transfer transfer)
+    {
+        if(transfer.getAmount().compareTo(BigDecimal.ZERO) > 0 &&
+                AccountService.accounts.get(transfer.getFromAccountId()) != null &&
+                AccountService.accounts.get(transfer.getToAccountId()) != null &&
+                AccountService.accounts.get(transfer.getFromAccountId()).getBalance().compareTo(transfer.getAmount()) >= 0)
+        {
+            return true;
+        }
+        return false;
+
     }
 
+    public void updateStatus(Transfer transfer)
+    {
+        if (transfer.getAmount().compareTo(BigDecimal.ZERO) == 0)
+        {
+            transfer.setStatus(Transfer.TransferStatus.AMOUNTZERO);
+        }
+        else if (AccountService.accounts.get(transfer.getFromAccountId()) == null)
+        {
+            transfer.setStatus(Transfer.TransferStatus.FROMIDNULL);
+        }
+        else if (AccountService.accounts.get(transfer.getToAccountId()) == null)
+        {
+            transfer.setStatus(Transfer.TransferStatus.TOIDNULL);
+        }
+        else if (AccountService.accounts.get(transfer.getFromAccountId()).getBalance().compareTo(transfer.getAmount()) < 0)
+        {
+            transfer.setStatus(Transfer.TransferStatus.AMOUNTLESS);
+        }
+
+    }
 
 }
