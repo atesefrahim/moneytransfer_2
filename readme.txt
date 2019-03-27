@@ -26,10 +26,9 @@ How to run the application
 
 Execute jar for process
 
-
 java -jar moneytransfer-1.0-SNAPSHOT.jar
 
-The application runs on port 8282
+The application runs on port 8282 // http://localhost:8282
 
 -----------------------------
 
