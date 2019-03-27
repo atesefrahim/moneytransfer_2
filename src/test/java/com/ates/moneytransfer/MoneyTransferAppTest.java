@@ -105,7 +105,7 @@ public class MoneyTransferAppTest {
         ObjectMapper objectMapper = new ObjectMapper();
         Transfer transfer = new Transfer();
         transfer.setAmount(BigDecimal.TEN);
-        transfer.setFromAccountId(1);
+        transfer.setFromAccountId(0);
         transfer.setToAccountId(2);
         transfer.setComment("test");
         String data = objectMapper.writeValueAsString(transfer);
