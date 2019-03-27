@@ -1,4 +1,4 @@
-MoneyTransfer between Accounts API / A Restful API.
+MoneyTransfer between Accounts API / A Spark Restful API .
 
 Developed using Java 8 and very light framework Spark.
 
